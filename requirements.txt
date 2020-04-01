@@ -45,7 +45,6 @@ pylint==2.4.3
 pymongo==3.8.0
 PySocks==1.6.8
 pytz==2018.9
-PyWavelets==1.0.2
 pywin32==223
 requests==2.21.0
 ruamel-yaml==0.15.46
