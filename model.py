@@ -3,20 +3,9 @@ import numpy as np
 import scipy.fftpack
 from sklearn import preprocessing
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import confusion_matrix, f1_score
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
-from sklearn.svm import SVC
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
 from keras.models import load_model
 import itertools
-import pickle
-import requests
-import json
 from datetime import datetime,timedelta
-import ast
 from pymongo import MongoClient
 import threading
 import re
