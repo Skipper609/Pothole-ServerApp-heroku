@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 import model as m
 import json
@@ -31,6 +31,9 @@ def getPotholes():
 # except Exception as e:
     # return jsonify(f"error:{e}")
     return jsonify({"potholes":res})
+@app.route('/test')
+def connectionTest():
+    return render_template('welcome.html')
 
 if __name__ == "__main__":
     m.initialize()
