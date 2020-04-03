@@ -1,4 +1,3 @@
-
 backcall==0.1.0
 backports.os==0.1.1
 backports.shutil-get-terminal-size==1.0.0
@@ -44,8 +43,6 @@ pandocfilters==1.4.2
 pylint==2.4.3
 pymongo==3.8.0
 requests==2.21.0
-scikit-learn==0.20.3
-scipy==1.2.1
 seaborn==0.9.0
 sphinxcontrib-websupport==1.1.0
 tensorboard==1.15.0
