@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
 import scipy.fftpack
-from sk import preprocessing
-from sk.preprocessing import StandardScaler
+from sklearn import preprocessing
+from sklearn.preprocessing import StandardScaler
 from keras.models import load_model
 import itertools
 from datetime import datetime,timedelta
