@@ -22,6 +22,20 @@ def predict():
     
     return jsonify("{Key : true}")
 
+@app.route('/getAllPotholes', methods=['POST'])
+def getAllPotholes():
+    try:
+        body = request.get_json()
+        minLat = body['minLat']
+        minLng = body['minLng']
+        maxLat = body['maxLat']
+        maxLang = body['maxLng']
+        points = m.getAllPointsReport(minLng, minLat, maxLang, maxLat)
+        return jsonify({"All Points": points})
+    except Exception as e:
+        return jsonify({"Error":str(e)})
+        
+
 @app.route('/potholes', methods=['POST'])
 def getPotholes():
     res = []
@@ -31,10 +45,11 @@ def getPotholes():
 # except Exception as e:
     # return jsonify(f"error:{e}")
     return jsonify({"potholes":res})
+
 @app.route('/test')
 def connectionTest():
-    return render_template('welcome.html')
+    return "<h1> App is up and running</h1>"
 
 if __name__ == "__main__":
     m.initialize()
-    app.run()
+    app.run(host="0.0.0.0",debug=True)

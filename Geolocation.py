@@ -37,7 +37,7 @@ class GeoLocation:
         self._check_bounds()
         
     def __str__(self):
-        degree_sign= u'\N{DEGREE SIGN}'
+        degree_sign = u'\N{DEGREE SIGN}'
         return ("({0:.4f}deg, {1:.4f}deg) = ({2:.6f}rad, {3:.6f}rad)").format(
             self.deg_lat, self.deg_lon, self.rad_lat, self.rad_lon)
         

@@ -27,7 +27,6 @@ def initialize():
 	warnings.simplefilter("ignore")
 	refreshPotholeInformation()
 
-
 def storePoints(locationList):
 	collection = db.Pothole_Holder
 	for location in locationList:
@@ -71,6 +70,16 @@ def refreshPotholeInformation():
 	holding.delete_many({})
 	end = time.perf_counter()
 	threading.Timer(REFRESH_TIME * 60 - (end - start), refreshPotholeInformation).start()
+
+def getAllPointsReport(minLng, minLat, maxLng, maxLat):
+	pothole = db.Pothole_Information
+	holes = pothole.find({
+		"latitude":{"$gt":minLat,"$lt":maxLat},
+		"longitude":{"$gt":minLng,"$lt":maxLng},
+	},{"_id":0})
+	r = [i for i in holes]
+	# print(r)
+	return r
 
 def getPotholes(latitude, longitude, radius,day):
 	#Radius in KMs
