@@ -3,7 +3,7 @@ import numpy as np
 import scipy.fftpack
 from sklearn import preprocessing
 from sklearn.preprocessing import StandardScaler
-from keras.models import load_model
+import joblib
 import itertools
 from datetime import datetime,timedelta
 from pymongo import MongoClient
@@ -18,14 +18,18 @@ client = ""
 db =""
 model_nn =""
 REFRESH_TIME = 30 #in minutes
+
+# this is for initializing different params and setting the refresing holding table
 def initialize():
 	global model_nn,client,db
-	model_nn = load_model('model_nn_corrected.h5py')
+	model_nn = joblib.load('joblib_model.joblib')
 	url="mongodb+srv://dbuser:dbuser@cluster0-cw2oj.mongodb.net/test?retryWrites=true&w=majority"
 	client=MongoClient(url)
 	db = client.Pothole_Details
 	warnings.simplefilter("ignore")
 	refreshPotholeInformation()
+
+# for storing the pothole details
 
 def storePoints(locationList):
 	collection = db.Pothole_Holder
@@ -37,6 +41,7 @@ def storePoints(locationList):
 		}
 		collection.insert_one(loc)
 
+#for clearing pothole holding table
 def refreshPotholeInformation():
 	pothole = db.Pothole_Information
 	holding = db.Pothole_Holder
@@ -70,7 +75,7 @@ def refreshPotholeInformation():
 	holding.delete_many({})
 	end = time.perf_counter()
 	threading.Timer(REFRESH_TIME * 60 - (end - start), refreshPotholeInformation).start()
-
+#returns all the pothole in a certain area
 def getAllPointsReport(minLng, minLat, maxLng, maxLat):
 	pothole = db.Pothole_Information
 	holes = pothole.find({
@@ -80,6 +85,8 @@ def getAllPointsReport(minLng, minLat, maxLng, maxLat):
 	r = [i for i in holes]
 	# print(r)
 	return r
+
+# returns the pothole of certain distance. the distance is sent as parameter in KMs
 
 def getPotholes(latitude, longitude, radius,day):
 	#Radius in KMs
@@ -94,13 +101,10 @@ def getPotholes(latitude, longitude, radius,day):
 	},
 	{"_id":0,"reports":0,"Time of First report":0})
 	r = [i for i in res]
-	# print(r)
 	return r
 
-
+#takes acc. meter n gyroscope reading as input and detects the potholes. If any found stores the points in holding table
 def predictPotholes(raw):
-
-
 	df = pd.DataFrame(columns=['timestamp', 'accx', 'accy', 'accz','gyrx', 'gyry', 'gyrz', 'latitude', 'longitude', 'speed'])
 	for r in raw:
 		data = str(r).split(',')
@@ -347,9 +351,6 @@ def predictPotholes(raw):
 
 	loc = np.array([df_main['latitude'],df_main['longitude']])
 	
-	# print(y_rec)
-	# print(loc)
-	
 	# mapping the pothole details with location
 	finalRes = []
 	for i in range(len(y_rec)):
@@ -359,9 +360,3 @@ def predictPotholes(raw):
 	# adding the location to holding table
 	if len(finalRes) > 0:
 		storePoints(finalRes)
-	
-	# return y_pred
-
-
-# storePoints([[11,11],[12,12],[12,12]])
-# refreshPotholeInformation()
