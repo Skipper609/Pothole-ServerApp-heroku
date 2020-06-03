@@ -18,7 +18,7 @@ def predict():
         # print(threading.active_count())
 
     except Exception as e:
-        return jsonify("{Key : false}")
+        return jsonify("{Key : " + str(e) +"}")
     
     return jsonify("{Key : true}")
 
@@ -39,11 +39,11 @@ def getAllPotholes():
 @app.route('/potholes', methods=['POST'])
 def getPotholes():
     res = []
-# try:
-    body = request.get_json()
-    res = m.getPotholes(body['latitude'], body['longitude'],body['radius'],body['day'])
-# except Exception as e:
-    # return jsonify(f"error:{e}")
+    try:
+        body = request.get_json()
+        res = m.getPotholes(body['latitude'], body['longitude'],body['radius'],body['day'])
+    except Exception as e:
+        return jsonify(f"error:{e}")
     return jsonify({"potholes":res})
 
 @app.route('/test')

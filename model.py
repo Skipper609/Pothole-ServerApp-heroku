@@ -14,19 +14,17 @@ import bson
 import warnings
 from Geolocation import GeoLocation
 
-client = ""
-db =""
-model_nn =""
-REFRESH_TIME = 30 #in minutes
 
 # this is for initializing different params and setting the refresing holding table
+
+model_nn = joblib.load('joblib_model.joblib')
+url="mongodb+srv://dbuser:dbuser@cluster0-cw2oj.mongodb.net/test?retryWrites=true&w=majority"
+client=MongoClient(url)
+db = client.Pothole_Details
+warnings.simplefilter("ignore")
+REFRESH_TIME = 30 #in minutes
+
 def initialize():
-	global model_nn,client,db
-	model_nn = joblib.load('joblib_model.joblib')
-	url="mongodb+srv://dbuser:dbuser@cluster0-cw2oj.mongodb.net/test?retryWrites=true&w=majority"
-	client=MongoClient(url)
-	db = client.Pothole_Details
-	warnings.simplefilter("ignore")
 	refreshPotholeInformation()
 
 # for storing the pothole details
@@ -111,7 +109,7 @@ def predictPotholes(raw):
 		for j in range(len(data)):
 			data[j] = float(data[j])
 		df2 = pd.DataFrame(pd.DataFrame([data], columns=['timestamp', 'accx', 'accy', 'accz',
-														 'gyrx', 'gyry', 'gyrz', 'latitude', 'longitude', 'speed']))
+														'gyrx', 'gyry', 'gyrz', 'latitude', 'longitude', 'speed']))
 		df = df.append(df2)
 
 
@@ -288,32 +286,32 @@ def predictPotholes(raw):
 		longitude = dt['longitude'][i+4]
 
 		df_temp = pd.DataFrame([[start,end,mean_ax,mean_ay,mean_az,mean_gx,mean_gy,mean_gz,sd_ax,
-								 sd_ay,sd_az,sd_gx,sd_gy,sd_gz,min_ax,min_ay,min_az,min_gx,min_gy,min_gz,
-								 max_ax,max_ay,max_az,max_gx,max_gy,max_gz,var_ax,var_ay,var_az,var_gx,var_gy,
-								 var_gz,med_ax,med_ay,med_az,med_gx,med_gy,med_gz,quant1_ax,quant1_ay,quant1_az
-								 ,quant1_gx,quant1_gy,quant1_gz,quant2_ax,quant2_ay,quant2_az,quant2_gx,
-								 quant2_gy,quant2_gz,quant3_ax,quant3_ay,quant3_az,quant3_gx,quant3_gy,
-								 quant3_gz,mad_ax,mad_ay,mad_az,mad_gx,mad_gy,mad_gz,skew_ax,skew_ay,
-								 skew_az,skew_gx,skew_gy,skew_gz,adx,ady,adz,gdx,gdy,gdz,fft_ax,fft_ay,fft_az,
-								 sp_ax,sp_ay,sp_az, latitude, longitude]], 
+								sd_ay,sd_az,sd_gx,sd_gy,sd_gz,min_ax,min_ay,min_az,min_gx,min_gy,min_gz,
+								max_ax,max_ay,max_az,max_gx,max_gy,max_gz,var_ax,var_ay,var_az,var_gx,var_gy,
+								var_gz,med_ax,med_ay,med_az,med_gx,med_gy,med_gz,quant1_ax,quant1_ay,quant1_az
+								,quant1_gx,quant1_gy,quant1_gz,quant2_ax,quant2_ay,quant2_az,quant2_gx,
+								quant2_gy,quant2_gz,quant3_ax,quant3_ay,quant3_az,quant3_gx,quant3_gy,
+								quant3_gz,mad_ax,mad_ay,mad_az,mad_gx,mad_gy,mad_gz,skew_ax,skew_ay,
+								skew_az,skew_gx,skew_gy,skew_gz,adx,ady,adz,gdx,gdy,gdz,fft_ax,fft_ay,fft_az,
+								sp_ax,sp_ay,sp_az, latitude, longitude]], 
 
-							  columns = ('ts_start','ts_end','mean_ax','mean_ay','mean_az','mean_gx','mean_gy',
-										 'mean_gz','sd_ax','sd_ay','sd_az','sd_gx','sd_gy','sd_gz','min_ax','min_ay'
-										 ,'min_az',
-										 'min_gx','min_gy','min_gz','max_ax','max_ay','max_az','max_gx','max_gy','max_gz',
-										 'var_ax','var_ay','var_az','var_gx','var_gy','var_gz','med_ax','med_ay'
-										 ,'med_az','med_gx',
-										 'med_gy','med_gz','quant1_ax','quant1_ay','quant1_az','quant1_gx',
-										 'quant1_gy',
-										 'quant1_gz','quant2_ax','quant2_ay','quant2_az','quant2_gx','quant2_gy'
-										 ,
-										 'quant2_gz','quant3_ax','quant3_ay','quant3_az','quant3_gx','quant3_gy',
-										 'quant3_gz',
-										 'mad_ax','mad_ay','mad_az','mad_gx','mad_gy','mad_gz','skew_ax',
-										 'skew_ay','skew_az',
-										 'skew_gx','skew_gy','skew_gz','adx','ady','adz','gdx','gdy','gdz'
-										 ,'fft_ax','fft_ay','fft_az',
-										 'sp_ax','sp_ay','sp_az', 'latitude', 'longitude'))
+							columns = ('ts_start','ts_end','mean_ax','mean_ay','mean_az','mean_gx','mean_gy',
+										'mean_gz','sd_ax','sd_ay','sd_az','sd_gx','sd_gy','sd_gz','min_ax','min_ay'
+										,'min_az',
+										'min_gx','min_gy','min_gz','max_ax','max_ay','max_az','max_gx','max_gy','max_gz',
+										'var_ax','var_ay','var_az','var_gx','var_gy','var_gz','med_ax','med_ay'
+										,'med_az','med_gx',
+										'med_gy','med_gz','quant1_ax','quant1_ay','quant1_az','quant1_gx',
+										'quant1_gy',
+										'quant1_gz','quant2_ax','quant2_ay','quant2_az','quant2_gx','quant2_gy'
+										,
+										'quant2_gz','quant3_ax','quant3_ay','quant3_az','quant3_gx','quant3_gy',
+										'quant3_gz',
+										'mad_ax','mad_ay','mad_az','mad_gx','mad_gy','mad_gz','skew_ax',
+										'skew_ay','skew_az',
+										'skew_gx','skew_gy','skew_gz','adx','ady','adz','gdx','gdy','gdz'
+										,'fft_ax','fft_ay','fft_az',
+										'sp_ax','sp_ay','sp_az', 'latitude', 'longitude'))
 
 		df_main = df_main.append(df_temp)
 
